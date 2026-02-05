@@ -1,29 +1,35 @@
 name: Pipeline de Auditoria DevOps
 
-# Quando isso vai rodar? (Gatilhos)
 on:
   push:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
 
-# O que ele vai fazer?
 jobs:
   execucao-auditoria:
-    # Define que vai rodar numa máquina Linux virtual do GitHub
     runs-on: ubuntu-latest
 
     steps:
-    # Passo 1: Baixar o código do repositório para a máquina virtual
     - name: Checkout do Código
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0   # garante histórico completo e commit correto
 
-    # Passo 2: Instalar o Python na máquina virtual
     - name: Configurar Python 3.9
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       with:
         python-version: '3.9'
 
-    # Passo 3: Rodar o nosso script (Estratégia C)
+    # 🔎 DEBUG CRÍTICO (pode remover depois)
+    - name: Verificar arquivo de auditoria
+      run: |
+        echo "Commit:"
+        git rev-parse HEAD
+        echo "Arquivos na root:"
+        ls -la
+        echo "Conteúdo do auditoria_ci.py:"
+        sed -n '1,200p' auditoria_ci.py
+
     - name: Rodar Script de Auditoria
       run: python auditoria_ci.py
