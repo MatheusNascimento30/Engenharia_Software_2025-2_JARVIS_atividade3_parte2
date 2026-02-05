@@ -1,0 +1,29 @@
+name: Pipeline de Auditoria DevOps
+
+# Quando isso vai rodar? (Gatilhos)
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+# O que ele vai fazer?
+jobs:
+  execucao-auditoria:
+    # Define que vai rodar numa máquina Linux virtual do GitHub
+    runs-on: ubuntu-latest
+
+    steps:
+    # Passo 1: Baixar o código do repositório para a máquina virtual
+    - name: Checkout do Código
+      uses: actions/checkout@v3
+
+    # Passo 2: Instalar o Python na máquina virtual
+    - name: Configurar Python 3.9
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+
+    # Passo 3: Rodar o nosso script (Estratégia C)
+    - name: Rodar Script de Auditoria
+      run: python auditoria_ci.py
